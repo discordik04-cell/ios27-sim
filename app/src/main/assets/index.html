@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>iOS 27</title>
+<style>
+:root{
+  --bg1:#05050a; --bg2:#0d1b2a; --bg3:#1b2838;
+  --glass:rgba(255,255,255,0.12); --glass2:rgba(255,255,255,0.08);
+  --line:rgba(255,255,255,0.18); --text:#fff; --text2:rgba(255,255,255,0.7);
+  --accent:#0a84ff; --green:#30d158; --orange:#ff9f0a; --red:#ff453a;
+  --radius:22px; --pad:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{height:100%;overflow:hidden;background:radial-gradient(ellipse at 30% 20%,#1a2a4a 0%,#05050a 60%);color:var(--text);font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,sans-serif}
+.screen{position:absolute;inset:0;transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .35s;overflow:hidden}
+.hidden{opacity:0;pointer-events:none}
+/* STATUS BAR */
+.statusbar{position:absolute;top:0;left:0;right:0;height:54px;display:flex;justify-content:space-between;align-items:center;padding:0 26px 0 30px;font-size:15px;font-weight:600;z-index:100;color:#fff}
+.statusbar .left{display:flex;align-items:center;gap:6px}
+.statusbar .right{display:flex;align-items:center;gap:6px}
+.battery{width:26px;height:13px;border:1.5px solid #fff;border-radius:4px;position:relative;padding:1.5px}
+.battery::after{content:'';position:absolute;right:-3px;top:3.5px;width:2px;height:6px;background:#fff;border-radius:0 2px 2px 0}
+.battery .fill{height:100%;width:78%;background:#fff;border-radius:2px}
+/* DYNAMIC ISLAND */
+.island{position:absolute;top:12px;left:50%;transform:translateX(-50%);height:36px;min-width:120px;background:#000;border-radius:20px;z-index:101;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s cubic-bezier(.34,1.56,.64,1);padding:0 14px}
+.island.expanded{width:300px;height:80px;border-radius:40px;top:12px}
+.island .dot{width:10px;height:10px;border-radius:50%;background:#333}
+.island .cam{width:12px;height:12px;border-radius:50%;background:#1a1a1a;border:1px solid #333}
+/* LOCK SCREEN */
+.lock{background:radial-gradient(ellipse at 50% 30%,#1a2a4a 0%,#05050a 70%);display:flex;flex-direction:column;align-items:center}
+.lock .time{font-size:96px;font-weight:200;letter-spacing:-3px;margin-top:90px;line-height:1}
+.lock .date{font-size:22px;margin-top:6px;opacity:.9;font-weight:500}
+.lock .notif-stack{position:absolute;bottom:180px;width:92%;display:flex;flex-direction:column;gap:10px}
+.notif{background:rgba(255,255,255,0.14);backdrop-filter:blur(30px);border-radius:20px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+.notif .icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;background:rgba(255,255,255,0.12)}
+.notif .body{flex:1}
+.notif .title{font-weight:600;font-size:14px}
+.notif .msg{font-size:13px;opacity:.8;margin-top:2px}
+.notif .time{font-size:11px;opacity:.6}
+.lock .bottombtns{position:absolute;bottom:46px;left:0;right:0;display:flex;justify-content:space-between;padding:0 44px}
+.lock .bottombtns .btn{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,0.14);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;font-size:24px}
+.lock .swipehint{position:absolute;bottom:16px;left:0;right:0;text-align:center;font-size:13px;opacity:.6}
+/* HOME */
+.home{background:radial-gradient(ellipse at 50% 20%,#1a2a4a 0%,#05050a 70%)}
+.home .grid{position:absolute;top:70px;left:0;right:0;padding:0 18px;display:grid;grid-template-columns:repeat(4,1fr);gap:22px 12px}
+.appicon{display:flex;flex-direction:column;align-items:center;gap:6px}
+.appicon .img{width:62px;height:62px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+.appicon .name{font-size:11px;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.pagedots{position:absolute;bottom:130px;left:0;right:0;display:flex;justify-content:center;gap:6px}
+.pagedots span{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.35);transition:all .3s}
+.pagedots span.active{width:20px;border-radius:4px;background:#fff}
+.dock{position:absolute;bottom:34px;left:16px;right:16px;height:92px;background:rgba(255,255,255,0.14);backdrop-filter:blur(40px);border-radius:34px;display:flex;justify-content:space-around;align-items:center;padding:0 8px}
+.dock .appicon .img{width:62px;height:62px}
+/* NOTIFICATION CENTER */
+.nc{background:rgba(5,5,10,0.75);backdrop-filter:blur(40px);transform:translateY(-100%);transition:transform .4s cubic-bezier(.2,.8,.2,1);z-index:90}
+.nc.open{transform:translateY(0)}
+.nc .header{padding:60px 20px 10px;font-size:34px;font-weight:700}
+.nc .list{padding:0 16px;display:flex;flex-direction:column;gap:10px}
+/* CONTROL CENTER */
+.cc{background:rgba(5,5,10,0.55);backdrop-filter:blur(50px);transform:translateY(-100%);transition:transform .4s cubic-bezier(.2,.8,.2,1);z-index:90;padding:60px 16px 40px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;align-content:start}
+.cc.open{transform:translateY(0)}
+.cc .tile{background:rgba(255,255,255,0.14);border-radius:20px;padding:14px;min-height:74px;display:flex;flex-direction:column;justify-content:space-between;transition:background .2s}
+.cc .tile.on{background:var(--accent)}
+.cc .tile .ic{font-size:22px}
+.cc .tile .nm{font-size:12px;opacity:.9;margin-top:4px}
+.cc .wide{grid-column:span 2;min-height:60px;display:flex;align-items:center;gap:12px}
+.cc .slider{grid-column:span 2;height:56px;background:rgba(255,255,255,0.14);border-radius:20px;display:flex;align-items:center;padding:0 16px;gap:10px}
+.cc .slider .track{flex:1;height:6px;background:rgba(255,255,255,0.2);border-radius:3px;position:relative;overflow:hidden}
+.cc .slider .fill{height:100%;width:60%;background:#fff;border-radius:3px}
+.cc .music{grid-column:span 2;background:rgba(255,255,255,0.14);border-radius:20px;padding:14px;display:flex;gap:12px;align-items:center}
+.cc .music .art{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,#ff6b6b,#feca57);display:flex;align-items:center;justify-content:center;font-size:24px}
+.cc .music .info{flex:1}
+.cc .music .t{font-weight:600;font-size:14px}
+.cc .music .a{font-size:12px;opacity:.7;margin-top:2px}
+/* APP SCREEN */
+.appscreen{background:#0a0a12;z-index:95;transform:scale(.92);opacity:0;pointer-events:none;transition:all .35s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column}
+.appscreen.open{transform:scale(1);opacity:1;pointer-events:auto}
+.appscreen .topbar{height:54px;display:flex;align-items:center;padding:0 16px;gap:12px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.appscreen .topbar .back{font-size:22px;color:var(--accent);cursor:pointer}
+.appscreen .topbar .title{font-weight:600;font-size:17px}
+.appscreen .content{flex:1;padding:20px;overflow:auto}
+/* CLOSE HANDLE */
+.handle{width:40px;height:5px;background:rgba(255,255,255,0.3);border-radius:3px;margin:8px auto 0}
+</style>
+</head>
+<body>
+
+<!-- STATUS BAR -->
+<div class="statusbar" id="statusbar">
+  <div class="left"><span id="time">9:41</span></div>
+  <div class="right">
+    <span>📶</span><span>Wi-Fi</span>
+    <div class="battery"><div class="fill"></div></div>
+  </div>
+</div>
+
+<!-- DYNAMIC ISLAND -->
+<div class="island" id="island">
+  <div class="cam"></div>
+  <div class="dot"></div>
+</div>
+
+<!-- LOCK SCREEN -->
+<div class="screen lock" id="lock">
+  <div class="time" id="locktime">9:41</div>
+  <div class="date" id="lockdate">Воскресенье, 18 октября</div>
+  <div class="notif-stack">
+    <div class="notif">
+      <div class="icon">💬</div>
+      <div class="body"><div class="title">Сообщения</div><div class="msg">Новое сообщение от Алекс</div></div>
+      <div class="time">сейчас</div>
+    </div>
+    <div class="notif">
+      <div class="icon">📧</div>
+      <div class="body"><div class="title">Почта</div><div class="msg">2 непрочитанных письма</div></div>
+      <div class="time">5м</div>
+    </div>
+  </div>
+  <div class="bottombtns">
+    <div class="btn" id="flashlight">🔦</div>
+    <div class="btn" id="camera">📷</div>
+  </div>
+  <div class="swipehint">Смахни вверх, чтобы открыть</div>
+</div>
+
+<!-- HOME -->
+<div class="screen home hidden" id="home">
+  <div class="grid" id="appgrid"></div>
+  <div class="pagedots" id="pagedots"><span class="active"></span><span></span><span></span></div>
+  <div class="dock" id="dock"></div>
+</div>
+
+<!-- NOTIFICATION CENTER -->
+<div class="screen nc" id="nc">
+  <div class="handle"></div>
+  <div class="header">Уведомления</div>
+  <div class="list">
+    <div class="notif"><div class="icon">💬</div><div class="body"><div class="title">Сообщения</div><div class="msg">Новое сообщение от Алекс</div></div><div class="time">сейчас</div></div>
+    <div class="notif"><div class="icon">📧</div><div class="body"><div class="title">Почта</div><div class="msg">2 непрочитанных письма</div></div><div class="time">5м</div></div>
+    <div class="notif"><div class="icon">📅</div><div class="body"><div class="title">Календарь</div><div class="msg">Встреча в 15:00</div></div><div class="time">1ч</div></div>
+  </div>
+</div>
+
+<!-- CONTROL CENTER -->
+<div class="screen cc" id="cc">
+  <div class="tile on" data-t="airplane"><div class="ic">✈️</div><div class="nm">Авиарежим</div></div>
+  <div class="tile on" data-t="wifi"><div class="ic">📶</div><div class="nm">Wi-Fi</div></div>
+  <div class="tile" data-t="bt"><div class="ic">🔵</div><div class="nm">Bluetooth</div></div>
+  <div class="tile" data-t="flash"><div class="ic">🔦</div><div class="nm">Фонарик</div></div>
+  <div class="wide tile" style="background:rgba(255,255,255,0.14)"><div style="font-size:22px">🔊</div><div style="flex:1"><div style="font-size:12px;opacity:.7">Звук</div><div class="track" style="height:6px;background:rgba(255,255,255,0.2);border-radius:3px;margin-top:6px;position:relative;overflow:hidden"><div style="width:70%;height:100%;background:#fff;border-radius:3px"></div></div></div></div>
+  <div class="slider"><span style="font-size:20px">☀️</span><div class="track"><div class="fill"></div></div></div>
+  <div class="slider"><span style="font-size:20px">🔊</span><div class="track"><div class="fill" style="width:50%"></div></div></div>
+  <div class="music">
+    <div class="art">🎵</div>
+    <div class="info"><div class="t">Не играет</div><div class="a">Музыка</div></div>
+    <div style="font-size:22px">▶️</div>
+  </div>
+  <div class="tile" data-t="rot"><div class="ic">🔒</div><div class="nm">Блокировка поворота</div></div>
+  <div class="tile" data-t="focus"><div class="ic">🌙</div><div class="nm">Фокус</div></div>
+</div>
+
+<!-- APP SCREEN -->
+<div class="appscreen" id="appscreen">
+  <div class="topbar">
+    <div class="back" id="appback">‹</div>
+    <div class="title" id="apptitle">App</div>
+  </div>
+  <div class="content" id="appcontent"></div>
+</div>
+
+<script>
+// Time
+function updateTime(){
+  const d=new Date();
+  const h=d.getHours().toString().padStart(2,'0');
+  const m=d.getMinutes().toString().padStart(2,'0');
+  const t=h+':'+m;
+  document.getElementById('time').textContent=t;
+  document.getElementById('locktime').textContent=t;
+  const days=['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
+  const months=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  document.getElementById('lockdate').textContent=days[d.getDay()]+', '+d.getDate()+' '+months[d.getMonth()];
+}
+updateTime(); setInterval(updateTime,30000);
+
+// Apps
+const apps=[
+ {name:'Телефон',icon:'📞',color:'#30d158'},
+ {name:'Сообщения',icon:'💬',color:'#30d158'},
+ {name:'Safari',icon:'🧭',color:'#0a84ff'},
+ {name:'Музыка',icon:'🎵',color:'#ff2d55'},
+ {name:'Камера',icon:'📷',color:'#8e8e93'},
+ {name:'Фото',icon:'🖼️',color:'#ff9f0a'},
+ {name:'Карты',icon:'🗺️',color:'#30d158'},
+ {name:'Настройки',icon:'⚙️',color:'#8e8e93'},
+ {name:'Почта',icon:'📧',color:'#0a84ff'},
+ {name:'Календарь',icon:'📅',color:'#ff453a'},
+ {name:'Погода',icon:'🌤️',color:'#5ac8fa'},
+ {name:'Заметки',icon:'📝',color:'#ffcc00'},
+];
+const dockApps=[apps[0],apps[1],apps[2],apps[3]];
+function makeIcon(a){
+  const d=document.createElement('div'); d.className='appicon';
+  d.innerHTML=`<div class="img" style="background:${a.color}">${a.icon}</div><div class="name">${a.name}</div>`;
+  d.onclick=()=>openApp(a);
+  return d;
+}
+const grid=document.getElementById('appgrid');
+apps.forEach(a=>grid.appendChild(makeIcon(a)));
+const dock=document.getElementById('dock');
+dockApps.forEach(a=>dock.appendChild(makeIcon(a)));
+
+// Open app
+function openApp(a){
+  document.getElementById('apptitle').textContent=a.name;
+  const c=document.getElementById('appcontent');
+  c.innerHTML=`<div style="text-align:center;padding:60px 0"><div style="font-size:72px">${a.icon}</div><div style="font-size:22px;font-weight:600;margin-top:16px">${a.name}</div><div style="opacity:.6;margin-top:8px">Симуляция iOS 27</div></div>`;
+  document.getElementById('appscreen').classList.add('open');
+}
+document.getElementById('appback').onclick=()=>document.getElementById('appscreen').classList.remove('open');
+
+// Unlock
+const lock=document.getElementById('lock');
+const home=document.getElementById('home');
+let startY=0;
+lock.addEventListener('touchstart',e=>{startY=e.touches[0].clientY});
+lock.addEventListener('touchend',e=>{
+  const dy=e.changedTouches[0].clientY-startY;
+  if(dy<-60){ lock.classList.add('hidden'); home.classList.remove('hidden'); }
+});
+// also click to unlock for desktop
+lock.addEventListener('click',e=>{ if(e.target===lock){ lock.classList.add('hidden'); home.classList.remove('hidden'); }});
+
+// Notification center: swipe down from top-left
+let ncOpen=false;
+function openNC(){ document.getElementById('nc').classList.add('open'); ncOpen=true; }
+function closeNC(){ document.getElementById('nc').classList.remove('open'); ncOpen=false; }
+// Control center: swipe down from top-right
+let ccOpen=false;
+function openCC(){ document.getElementById('cc').classList.add('open'); ccOpen=true; }
+function closeCC(){ document.getElementById('cc').classList.remove('open'); ccOpen=false; }
+
+document.addEventListener('touchstart',e=>{
+  const x=e.touches[0].clientX; const y=e.touches[0].clientY;
+  if(y<60 && !ncOpen && !ccOpen){
+    if(x < window.innerWidth/2) openNC(); else openCC();
+  }
+});
+// close on tap in lower area
+document.getElementById('nc').addEventListener('click',e=>{ if(e.target.id==='nc') closeNC(); });
+document.getElementById('cc').addEventListener('click',e=>{ if(e.target.id==='cc') closeCC(); });
+
+// Control center toggles
+document.querySelectorAll('.cc .tile[data-t]').forEach(t=>{
+  t.addEventListener('click',()=>t.classList.toggle('on'));
+});
+
+// Island tap expand
+const island=document.getElementById('island');
+island.addEventListener('click',()=>{ island.classList.toggle('expanded'); });
+
+// Flashlight/camera buttons on lock
+document.getElementById('flashlight').addEventListener('click',e=>{e.stopPropagation(); lock.classList.add('hidden'); home.classList.remove('hidden');});
+document.getElementById('camera').addEventListener('click',e=>{e.stopPropagation(); lock.classList.add('hidden'); home.classList.remove('hidden');});
+
+// Prevent scroll bounce
+document.body.addEventListener('touchmove',e=>{ if(e.target===document.body) e.preventDefault(); },{passive:false});
+</script>
+</body>
+</html>

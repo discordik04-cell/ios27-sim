@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iOS 27 Sim — UI Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:#0a0a0f;color:#fff;padding:24px}
+h1{text-align:center;margin-bottom:8px;font-size:22px}
+.sub{text-align:center;color:#888;margin-bottom:24px;font-size:14px}
+.wrap{display:flex;gap:24px;justify-content:center;flex-wrap:wrap}
+.phone{width:390px;height:844px;border-radius:52px;border:10px solid #1a1a1f;overflow:hidden;position:relative;background:#000;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.label{text-align:center;margin-top:12px;font-weight:600}
+.mood{text-align:center;color:#888;font-size:13px;margin-top:4px}
+/* wallpaper */
+.wp1{background:linear-gradient(135deg,#1e3c72,#2a5298,#6dd5ed)}
+.wp2{background:linear-gradient(135deg,#ff6b6b,#feca57,#48dbfb)}
+.wp3{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364)}
+.status{position:absolute;top:0;left:0;right:0;height:54px;display:flex;justify-content:space-between;align-items:center;padding:0 28px 0 32px;color:#fff;font-size:15px;font-weight:600;z-index:5}
+.di{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:120px;height:36px;background:#000;border-radius:20px;z-index:6}
+.home{position:absolute;inset:0;padding:60px 16px 100px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px 12px;align-content:start}
+.icon{display:flex;flex-direction:column;align-items:center;gap:6px}
+.icon .img{width:60px;height:60px;border-radius:14px;background:rgba(255,255,255,.15);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;font-size:28px}
+.icon .name{color:#fff;font-size:11px;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.dock{position:absolute;bottom:20px;left:16px;right:16px;height:88px;background:rgba(255,255,255,.15);backdrop-filter:blur(30px);border-radius:32px;display:flex;justify-content:space-around;align-items:center}
+.dock .img{width:60px;height:60px;border-radius:14px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:28px}
+.widget{grid-column:span 2;background:rgba(255,255,255,.18);backdrop-filter:blur(20px);border-radius:22px;padding:14px;color:#fff;min-height:120px}
+.widget .t{font-size:13px;opacity:.8}
+.widget .v{font-size:34px;font-weight:700;margin-top:4px}
+.pagedots{position:absolute;bottom:118px;left:0;right:0;display:flex;justify-content:center;gap:6px}
+.pagedots span{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4)}
+.pagedots span.active{width:20px;border-radius:4px;background:#fff}
+.lock{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding-top:120px;color:#fff}
+.lock .time{font-size:84px;font-weight:200;letter-spacing:-2px}
+.lock .date{font-size:20px;margin-top:4px;opacity:.9}
+.lock .notif{margin-top:40px;width:90%;background:rgba(255,255,255,.18);backdrop-filter:blur(20px);border-radius:18px;padding:14px}
+.lock .notif .t{font-weight:600;font-size:14px}
+.lock .notif .b{font-size:13px;opacity:.8;margin-top:2px}
+.lock .bottom{position:absolute;bottom:40px;left:0;right:0;display:flex;justify-content:space-between;padding:0 40px}
+.lock .bottom .btn{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.18);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;font-size:24px}
+.cc{position:absolute;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(40px);padding:60px 16px 40px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;align-content:start}
+.cc .tile{background:rgba(255,255,255,.18);border-radius:18px;padding:14px;color:#fff;min-height:70px;display:flex;flex-direction:column;justify-content:space-between}
+.cc .tile .icon{font-size:22px}
+.cc .tile .name{font-size:12px;opacity:.9}
+.cc .big{grid-column:span 2;min-height:120px}
+.cc .slider{grid-column:span 2;background:rgba(255,255,255,.18);border-radius:18px;height:56px;display:flex;align-items:center;padding:0 16px;gap:10px}
+</style>
+</head>
+<body>
+<h1>iOS 27 Sim — выбери направление</h1>
+<p class="sub">3 варианта главного экрана. Напиши номер (1/2/3) или "микс".</p>
+<div class="wrap">
+  <div>
+    <div class="phone wp1">
+      <div class="di"></div>
+      <div class="status"><span>9:41</span><span>5G 🔋</span></div>
+      <div class="home">
+        <div class="icon"><div class="img">📱</div><div class="name">Phone</div></div>
+        <div class="icon"><div class="img">💬</div><div class="name">Messages</div></div>
+        <div class="icon"><div class="img">📷</div><div class="name">Camera</div></div>
+        <div class="icon"><div class="img">🎵</div><div class="name">Music</div></div>
+        <div class="icon"><div class="img">🗺️</div><div class="name">Maps</div></div>
+        <div class="icon"><div class="img">⚙️</div><div class="name">Settings</div></div>
+        <div class="icon"><div class="img">📸</div><div class="name">Photos</div></div>
+        <div class="icon"><div class="img">🌐</div><div class="name">Safari</div></div>
+      </div>
+      <div class="pagedots"><span class="active"></span><span></span><span></span></div>
+      <div class="dock">
+        <div class="img">📞</div><div class="img">💬</div><div class="img">🌐</div><div class="img">🎵</div>
+      </div>
+    </div>
+    <div class="label">① Классический iOS</div>
+    <div class="mood">Чистая сетка иконок, сине-голубой градиент</div>
+  </div>
+  <div>
+    <div class="phone wp2">
+      <div class="di"></div>
+      <div class="status"><span>9:41</span><span>5G 🔋</span></div>
+      <div class="home">
+        <div class="widget"><div class="t">Погода</div><div class="v">22°</div><div class="t">Москва · Солнечно</div></div>
+        <div class="widget"><div class="t">Календарь</div><div class="v">18</div><div class="t">Воскресенье · Окт</div></div>
+        <div class="icon"><div class="img">📱</div><div class="name">Phone</div></div>
+        <div class="icon"><div class="img">💬</div><div class="name">Messages</div></div>
+        <div class="icon"><div class="img">📷</div><div class="name">Camera</div></div>
+        <div class="icon"><div class="img">🎵</div><div class="name">Music</div></div>
+        <div class="icon"><div class="img">🗺️</div><div class="name">Maps</div></div>
+        <div class="icon"><div class="img">⚙️</div><div class="name">Settings</div></div>
+      </div>
+      <div class="pagedots"><span class="active"></span><span></span></div>
+      <div class="dock">
+        <div class="img">📞</div><div class="img">💬</div><div class="img">🌐</div><div class="img">🎵</div>
+      </div>
+    </div>
+    <div class="label">② С виджетами</div>
+    <div class="mood">Тёплый градиент + виджеты погоды и календаря</div>
+  </div>
+  <div>
+    <div class="phone wp3">
+      <div class="di"></div>
+      <div class="status"><span>9:41</span><span>5G 🔋</span></div>
+      <div class="lock">
+        <div class="time">9:41</div>
+        <div class="date">Воскресенье, 18 октября</div>
+        <div class="notif"><div class="t">Сообщения</div><div class="b">Новое сообщение от Алекс</div></div>
+        <div class="notif"><div class="t">Почта</div><div class="b">2 непрочитанных письма</div></div>
+        <div class="bottom"><div class="btn">🔦</div><div class="btn">📷</div></div>
+      </div>
+    </div>
+    <div class="label">③ Lock screen</div>
+    <div class="mood">Тёмный градиент, крупное время, уведомления</div>
+  </div>
+</div>
+</body>
+</html>
